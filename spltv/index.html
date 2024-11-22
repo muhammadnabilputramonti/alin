@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solusi Persamaan Linear 3 Variabel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Solusi Persamaan Linear 3 Variabel</h1>
+        <form id="form">
+            <div>
+                <label for="a1">a1 (untuk x): </label><input type="number" id="a1" value="1">
+                <label for="b1">b1 (untuk y): </label><input type="number" id="b1" value="1">
+                <label for="c1">c1 (untuk z): </label><input type="number" id="c1" value="1">
+                <label for="result1">Hasil 1: </label><input type="number" id="result1" value="6">
+            </div>
+            <div>
+                <label for="a2">a2 (untuk x): </label><input type="number" id="a2" value="1">
+                <label for="b2">b2 (untuk y): </label><input type="number" id="b2" value="1">
+                <label for="c2">c2 (untuk z): </label><input type="number" id="c2" value="1">
+                <label for="result2">Hasil 2: </label><input type="number" id="result2" value="6">
+            </div>
+            <div>
+                <label for="a3">a3 (untuk x): </label><input type="number" id="a3" value="1">
+                <label for="b3">b3 (untuk y): </label><input type="number" id="b3" value="1">
+                <label for="c3">c3 (untuk z): </label><input type="number" id="c3" value="1">
+                <label for="result3">Hasil 3: </label><input type="number" id="result3" value="6">
+            </div>
+            <div class="buttons">
+                <button type="submit" id="calculate">Hitung</button>
+                <button type="reset">Reset</button>
+            </div>
+        </form>
+
+        <div id="steps"></div>
+        <div id="result"></div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.1.0/math.js"></script>
+    <script src="script.js"></script>
+ 
+</body>
+</html>

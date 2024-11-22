@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Matriks 2x2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+    <style>
+        /* Style yang sama seperti sebelumnya */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #0077ff;
+        }
+
+        .matrix-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .matrix-wrapper {
+            text-align: center;
+        }
+
+        .matrix-title {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 60px);
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .matrix input {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #0077ff;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .matrix input:hover {
+            border-color: #005bb5;
+        }
+
+        .matrix input:focus {
+            border-color: #ff5733;
+            outline: none;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            background-color: #0077ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: #005bb5;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .result table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .result th, .result td {
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            background-color: #f3f6fa;
+            border: 1px solid #ddd;
+        }
+
+        .result th {
+            background-color: #0077ff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kalkulator Matriks 2x2</h1>
+        <div class="matrix-container">
+            <!-- Matriks A -->
+            <div class="matrix-wrapper">
+                <div class="matrix-title">Matriks A</div>
+                <div class="matrix">
+                    <input type="number" id="a00" placeholder="A1">
+                    <input type="number" id="a01" placeholder="A2">
+                    <input type="number" id="a10" placeholder="A3">
+                    <input type="number" id="a11" placeholder="A4">
+                </div>
+            </div>
+            <!-- Matriks B -->
+            <div class="matrix-wrapper">
+                <div class="matrix-title">Matriks B</div>
+                <div class="matrix">
+                    <input type="number" id="b00" placeholder="B1">
+                    <input type="number" id="b01" placeholder="B2">
+                    <input type="number" id="b10" placeholder="B3">
+                    <input type="number" id="b11" placeholder="B4">
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button onclick="tambahMatriks()">Tambah</button>
+            <button onclick="kurangMatriks()">Kurang</button>
+            <button onclick="kaliMatriks()">Kali</button>
+            <button onclick="transposMatriks('a')">Transpos A</button>
+            <button onclick="transposMatriks('b')">Transpos B</button>
+            <button onclick="inverseMatriks('a')">Invers A</button>
+            <button onclick="inverseMatriks('b')">Invers B</button>
+            <button onclick="determinantMatriks('a')">Determinan A</button>
+            <button onclick="determinantMatriks('b')">Determinan B</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+  <script>
+    function getMatrixValues(matrix) {
+    const values = [
+        [parseFloat(document.getElementById(`${matrix}00`).value) || 0, parseFloat(document.getElementById(`${matrix}01`).value) || 0],
+        [parseFloat(document.getElementById(`${matrix}10`).value) || 0, parseFloat(document.getElementById(`${matrix}11`).value) || 0]
+    ];
+    return values;
+}
+
+function displayResult(title, result, steps) {
+    const resultDiv = document.getElementById('result');
+    let resultString = `<h2>${title}</h2>`;
+    resultString += '<table>';
+    for (let i = 0; i < result.length; i++) {
+        resultString += '<tr>';
+        for (let j = 0; j < result[i].length; j++) {
+            resultString += `<td>${result[i][j].toFixed(2)}</td>`;
+        }
+        resultString += '</tr>';
+    }
+    resultString += '</table>';
+    if (steps) {
+        resultString += `<strong>Langkah-langkah:</strong><br><table><tbody>${steps}</tbody></table>`;
+    }
+    resultDiv.innerHTML = resultString;
+}
+
+function tambahMatriks() {
+    const a = getMatrixValues('a');
+    const b = getMatrixValues('b');
+    const result = math.add(a, b);
+    let steps = '';
+
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+            steps += `<tr><td>C[${i}][${j}]</td><td>A[${i}][${j}] + B[${i}][${j}]</td><td>${a[i][j]} + ${b[i][j]}</td><td>=</td><td>${result[i][j]}</td></tr>`;
+        }
+    }
+    displayResult('Hasil Penjumlahan Matriks A dan B', result, steps);
+}
+
+function kurangMatriks() {
+    const a = getMatrixValues('a');
+    const b = getMatrixValues('b');
+    const result = math.subtract(a, b);
+    let steps = '';
+
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+            steps += `<tr><td>C[${i}][${j}]</td><td>A[${i}][${j}] - B[${i}][${j}]</td><td>${a[i][j]} - ${b[i][j]}</td><td>=</td><td>${result[i][j]}</td></tr>`;
+        }
+    }
+    displayResult('Hasil Pengurangan Matriks A dan B', result, steps);
+}
+
+function kaliMatriks() {
+    const a = getMatrixValues('a');
+    const b = getMatrixValues('b');
+    const result = math.multiply(a, b);
+    let steps = '';
+
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+            let calculation = '';
+            for (let k = 0; k < 2; k++) {
+                calculation += `${a[i][k]} * ${b[k][j]}${k < 1 ? ' + ' : ''}`;
+            }
+            steps += `<tr><td>C[${i}][${j}]</td><td>Σ(A[${i}][k] * B[k][${j}])</td><td>${calculation}</td><td>=</td><td>${result[i][j]}</td></tr>`;
+        }
+    }
+    displayResult('Hasil Perkalian Matriks A dan B', result, steps);
+}
+
+function transposMatriks(matrix) {
+    const mat = getMatrixValues(matrix);
+    const result = math.transpose(mat);
+    let steps = `<tr><td>Matriks ${matrix.toUpperCase()}:</td><td colspan="2">${mat.map(row => row.join(', ')).join(' | ')}</td></tr>`;
+    for (let i = 0; i < 2; i++) {
+        steps += `<tr><td>${mat[i].join(', ')}</td><td>→</td><td>${result[i].join(', ')}</td></tr>`;
+    }
+    displayResult(`Transpos Matriks ${matrix.toUpperCase()}`, result, steps);
+}
+
+function determinantMatriks(matrix) {
+    const mat = getMatrixValues(matrix);
+    const result = math.det(mat);
+    const steps = `<tr><td>Hasil determinan:</td><td>${result}</td></tr>`;
+    displayResult(`Determinan Matriks ${matrix.toUpperCase()}`, [[result]], steps);
+}
+
+function inverseMatriks(matrix) {
+    const mat = getMatrixValues(matrix);
+    const det = math.det(mat);
+    if (det === 0) {
+        displayResult(`Invers Matriks ${matrix.toUpperCase()}`, [['Tidak ada invers (det(A) = 0)']], '');
+        return;
+    }
+    const result = math.inv(mat);
+    let steps = `<tr><td>Matriks:</td><td colspan="2">${mat.map(row => row.join(', ')).join(' | ')}</td></tr>`;
+    steps += `<tr><td colspan="2">Jika det(A) ≠ 0, maka invers A ada. Hasil invers dapat dihitung sebagai:</td></tr>`;
+    steps += `<tr><td>Hasil invers:</td><td>${result.map(row => row.join(', ')).join(' | ')}</td></tr>`;
+    displayResult(`Invers Matriks ${matrix.toUpperCase()}`, result, steps);
+}
+
+  </script>
+</body>
+</html>

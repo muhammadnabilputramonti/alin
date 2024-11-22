@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Kalkulator SPLDV</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Kalkulator SPLDV</h1>
+        <form id="equationForm">
+            <h2>Masukkan Persamaan</h2>
+            <div class="equation">
+                <input type="number" id="a1" placeholder="Koef. x1" required>
+                <span class="operator">x</span>
+                <select id="op1">
+                    <option value="add">+</option>
+                    <option value="subtract">-</option>
+                </select>
+                <input type="number" id="b1" placeholder="Koef. y1" required>
+                <span class="operator">y =</span>
+                <input type="number" id="c1" placeholder="Hasil 1" required>
+            </div>
+            <div class="equation">
+                <input type="number" id="a2" placeholder="Koef. x2" required>
+                <span class="operator">x</span>
+                <select id="op2">
+                    <option value="add">+</option>
+                    <option value="subtract">-</option>
+                </select>
+                <input type="number" id="b2" placeholder="Koef. y2" required>
+                <span class="operator">y =</span>
+                <input type="number" id="c2" placeholder="Hasil 2" required>
+            </div>
+            <button type="submit">Hitung</button>
+        </form>
+        <div id="steps" class="steps"></div>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
